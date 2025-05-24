@@ -19,9 +19,35 @@ class GPTDatasetV1(Dataset):
 
             self.input_ids.append(torch.tensor(input_chunk))
             self.target_ids.append(torch.tensor(target_chunk))
-        def __len__(self):
-            return len(self.input_ids)
-        def __get__item(self,idx):
-            return self.input_ids[idx],self.target_ids[idx]
+    def __len__(self):
+        return len(self.input_ids)
+    def __getitem__(self,idx): 
+        '''
+         returns that row of the input and output based on the index
+        we are using a map style dataset
+        '''
+        return self.input_ids[idx],self.target_ids[idx]
+    
+def create_dataloader_v1(txt, batch_size=4, max_length=256, stride=128,
+                        shuffle=True, drop_last=True,num_workers=0 ):
+    '''
+    - batch_size determines how many parllel threads it runs
+    - the DataLoader will directly look into the __getitem__() method in the GPTDatasetV1 class and collect the I/O values from the 
+    return function
+    '''
+    dataset=GPTDatasetV1(txt,tokenizer,max_length,stride)
 
- 
+    #Create dataloader
+    dataloader=DataLoader(
+        dataset, 
+        batch_size=batch_size,
+        shuffle=shuffle,
+        drop_last=drop_last,
+        num_workers=num_workers
+    )
+    return dataloader
+dataloader = create_dataloader_v1(raw_text,batch_size=8,max_length=4,stride=4,shuffle=False)
+data_iter = iter(dataloader)
+inputs,targets = next(data_iter)
+print("Inputs:\n",inputs)
+print("\nTargets:\n",targets)
