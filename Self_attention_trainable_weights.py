@@ -35,7 +35,7 @@ class SelfAttention_v1(nn.Module):
 
         d_k = keys.shape[-1]
         attn_weights = torch.softmax(attn_scores/keys.shape[-1]**0.5, dim=-1) ## learn about why divide by square root ?  
-# CALCULATE CONTEXT VECTOR
+# STEP NUMBER 4: CALCULATE CONTEXT VECTOR
         context_vector = attn_weights @ values
         return context_vector
 
