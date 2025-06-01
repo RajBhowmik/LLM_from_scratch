@@ -30,12 +30,13 @@ class SelfAttention_v1(nn.Module):
         values = self.W_value(x)
    
 ## STEP NUMBER 2: COMPUTE ATTENTION SCORES
-        attn_scores = queries @ keys.T   
+        attn_scores = queries @ keys.T   ## how much attention should you pay to each input t
+
 ## STEP NUMBER 3: COMPUTE ATTENTION WEIGHTS - BASICALLY NORMALIZE IT. USE SOFTMAX
 
-        d_k = keys.shape[-1]
         attn_weights = torch.softmax(attn_scores/keys.shape[-1]**0.5, dim=-1) ## learn about why divide by square root ?  
 # STEP NUMBER 4: CALCULATE CONTEXT VECTOR
+
         context_vector = attn_weights @ values
         return context_vector
 
@@ -52,7 +53,7 @@ d_in = inputs.shape[1]
 d_out = 2
 
 torch.manual_seed(789)
-sa = SelfAttention_v1(d_in,d_out,)
+sa = SelfAttention_v1(d_in,d_out)
 print(sa(inputs))
 
 
