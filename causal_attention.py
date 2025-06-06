@@ -18,9 +18,10 @@ class causalAttention_V1(nn.Module):
         values = self.W_value(x)
 
         attn_scores = queries @ keys.transpose(1,2)
+        print(attn_scores.shape)
         '''
         why transpose(1,2)?
-        
+
         keys.T is a convenient shorthand only when the tensor is 2-D (matrix).
         With anything that has more than two dimensions PyTorch interprets .T as “reverse the entire order of the dimensions.”
 
@@ -42,7 +43,7 @@ class causalAttention_V1(nn.Module):
         
         '''
         attn_scores.masked_fill_(
-            self.mask.bool()[:num_tokens,:num_tokens],-torch.inf # num_tokens to take care of smaller length
+            self.mask.bool()[:num_tokens,:num_tokens],-torch.inf # num_tokens to take care of smaller length of any batch that might  come, especially ending batches   
         )
         attn_weights = torch.softmax(
             attn_scores/keys.shape[-1]**0.5, dim=-1
@@ -66,6 +67,7 @@ d_in = inputs.shape[1]
 d_out = 2
 batch = torch.stack((inputs,inputs), dim=0)
 context_length = batch.shape[1]
+print(context_length)
 torch.manual_seed(123)
 ca = causalAttention_V1(d_in,d_out,context_length,0.0)    
 context_vector = ca(batch)
