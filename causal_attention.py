@@ -5,7 +5,7 @@ class causalAttention_V1(nn.Module):
     def __init__(self, d_in,d_out, context_length,dropout,qkv_bias=False):
         super().__init__()
         self.d_out= d_out
-        self.W_query = nn.Linear(d_in,d_out, bias=qkv_bias)
+        self.W_query = nn.Linear(d_in,d_out, bias=qkv_bias) #weight Matrice
         self.W_key = nn.Linear(d_in,d_out,bias=qkv_bias)
         self.W_value = nn.Linear(d_in,d_out,bias=qkv_bias)
         self.dropout= nn.Dropout(dropout)
@@ -18,7 +18,6 @@ class causalAttention_V1(nn.Module):
         values = self.W_value(x)
 
         attn_scores = queries @ keys.transpose(1,2)
-        print(attn_scores.shape)
         '''
         why transpose(1,2)?
 
@@ -67,8 +66,8 @@ d_in = inputs.shape[1]
 d_out = 2
 batch = torch.stack((inputs,inputs), dim=0)
 context_length = batch.shape[1]
-print(context_length)
+# print(context_length)
 torch.manual_seed(123)
 ca = causalAttention_V1(d_in,d_out,context_length,0.0)    
 context_vector = ca(batch)
-print(context_vector)
+# print(context_vector)
