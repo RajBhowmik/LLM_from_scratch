@@ -1,3 +1,7 @@
+'''currently this code is inefficient since attention head is computed sequentially, in next stages we will do a matrix multiplication
+do to it in parallel
+'''
+
 from causal_attention import causalAttention_V1
 import torch
 import torch.nn as nn
