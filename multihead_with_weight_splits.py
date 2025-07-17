@@ -3,6 +3,9 @@ import torch.nn as nn
 
 class MultiHeadAttention(nn.Module):
     def __init__(self,d_in,d_out,context_length,dropout,num_heads,qkv_bias=False):
+        '''
+        if you use something only once in __init__ dont need self, but outside this if we use in any function use self
+        '''
         super().__init__()
         assert(d_out%num_heads ==0),\
         "d_out must be divisible by zero"
